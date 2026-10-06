@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Tayab Shaikh — Video Editor</title>
+<style>
+:root{color-scheme:dark;--bg:#07060f;--bg2:#0d0b24;--fg:#e9e6ff;--mute:#8a84b8;--p1:#7c3aed;--p2:#a78bfa;--b1:#1e3a8a;--b2:#3b5bdb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+.hero{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;cursor:grab;background:radial-gradient(ellipse at 50% 38%,#1a1245 0%,var(--bg2) 38%,var(--bg) 75%)}
+.hero:active{cursor:grabbing}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 40%,rgba(124,58,237,.55),rgba(30,58,138,.25) 45%,transparent 70%)}
+.top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:calc(18px + env(safe-area-inset-top,0px)) clamp(16px,4vw,48px) 0;font-size:.85rem;color:var(--mute);z-index:2;letter-spacing:.06em;text-transform:uppercase}
+.top b{color:var(--fg)}
+.copy{position:relative;z-index:2;padding:0 16px 84px;pointer-events:none;opacity:0;transform:translateY(24px);transition:opacity 1s .35s,transform 1s .35s}
+.ready .copy{opacity:1;transform:none}
+.scrim{position:absolute;left:0;right:0;bottom:0;height:62%;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(5,4,12,.96) 0%,rgba(5,4,12,.82) 38%,rgba(5,4,12,.4) 70%,transparent 100%)}
+h1{margin:0 0 10px;font-size:clamp(2.4rem,8vw,6rem);line-height:.95;font-weight:800;letter-spacing:-.04em;color:#f5f3ff;text-shadow:0 2px 4px rgba(5,4,12,.9),0 4px 32px rgba(5,4,12,.95),0 0 48px rgba(124,58,237,.35)}
+h1 span{color:#c4b5fd}
+.sub{margin:0 0 14px;color:#d8d3fa;font-size:clamp(.95rem,2vw,1.15rem);text-shadow:0 2px 12px rgba(5,4,12,.95)}
+.hint{background:rgba(7,6,15,.65);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:inline-block;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--p2);padding:8px 16px;border:1px solid rgba(167,139,250,.35);border-radius:999px;animation:pulse 1.8s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(124,58,237,.12);opacity:.75}}
+.marq{position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));overflow:hidden;white-space:nowrap;z-index:2;border-top:1px solid rgba(167,139,250,.15);padding-top:12px;pointer-events:none}
+.marq div{display:inline-block;animation:mq 45s linear infinite;font-weight:700;letter-spacing:.2em;color:rgba(167,139,250,.5);font-size:.85rem}
+@keyframes mq{to{transform:translateX(-50%)}}
+#pre{position:fixed;inset:0;z-index:10;background:#05040c;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 1s cubic-bezier(.77,0,.18,1);overflow:hidden}
+#pre.out{transform:translateY(-100%)}
+#pre:before{content:"";position:absolute;width:min(70vw,520px);height:min(70vw,520px);border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.18),rgba(59,91,219,.07) 42%,transparent 70%);filter:blur(8px);animation:loaderGlow 2.8s ease-in-out infinite}
+#pre .rec{position:absolute;top:calc(22px + env(safe-area-inset-top,0px));left:clamp(16px,4vw,48px);color:var(--mute);letter-spacing:.2em;font-size:.8rem;z-index:2}
+#pre .rec i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#a78bfa;margin-right:8px;animation:pulse 1s infinite}
+
+/* Dynamic Video Editing Logo Styling */
+.loaderMark{position:relative;width:clamp(140px,26vw,210px);height:clamp(140px,26vw,210px);display:grid;place-items:center;z-index:1}
+.loaderRing{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(167,139,250,.45);box-shadow:0 0 45px rgba(124,58,237,.28),inset 0 0 25px rgba(59,91,219,.15);animation:loaderSpin 8s linear infinite}
+.loaderRingInner{position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(196,181,253,.3);animation:loaderSpinReverse 12s linear infinite}
+.loaderRingInner:after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:#a78bfa;box-shadow:0 0 16px #a78bfa;transform:translateX(-50%)}
+.videoLogoContainer{position:relative;width:68%;height:68%;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.25) 0%,rgba(13,11,36,.8) 80%);border:2px solid rgba(196,181,253,.8);box-shadow:0 0 35px rgba(124,58,237,.4),inset 0 0 20px rgba(124,58,237,.25);display:flex;align-items:center;justify-content:center;animation:logoPulse 2.4s ease-in-out infinite}
+.filmReelOverlay{position:absolute;inset:6px;border-radius:50%;border:2px dotted rgba(167,139,250,.5);animation:loaderSpin 15s linear infinite}
+.playIcon{width:0;height:0;border-style:solid;border-width:16px 0 16px 28px;border-color:transparent transparent transparent #f5f3ff;margin-left:6px;filter:drop-shadow(0 0 12px rgba(167,139,250,.9));animation:playGlow 2s ease-in-out infinite}
+
+.loaderText{position:relative;z-index:1;margin-top:28px;text-align:center}
+.loaderBrand{font-size:clamp(1rem,2.4vw,1.35rem);font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:#f5f3ff}
+.loaderRole{margin-top:8px;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+.loaderProgress{position:relative;z-index:1;width:min(300px,64vw);height:2px;background:rgba(167,139,250,.14);margin-top:24px;overflow:hidden}
+.loaderProgress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p1),var(--b2),var(--p2));box-shadow:0 0 12px rgba(167,139,250,.7);transition:width 2.3s linear}
+.loaderPercent{position:relative;z-index:1;margin-top:10px;font-size:.7rem;letter-spacing:.18em;color:var(--p2)}
+
+@keyframes loaderSpin{to{transform:rotate(360deg)}}
+@keyframes loaderSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes logoPulse{0%,100%{transform:scale(1);box-shadow:0 0 35px rgba(124,58,237,.4)}50%{transform:scale(1.05);box-shadow:0 0 50px rgba(167,139,250,.65)}}
+@keyframes playGlow{0%,100%{filter:drop-shadow(0 0 10px rgba(167,139,250,.8))}50%{filter:drop-shadow(0 0 20px rgba(245,243,255,1))}}
+@keyframes loaderGlow{50%{transform:scale(1.15);opacity:.7}}
+@media (prefers-reduced-motion:reduce){.loaderRing,.loaderRingInner,.filmReelOverlay,.videoLogoContainer,.playIcon,#pre:before{animation:none}}
+@media (prefers-reduced-motion:reduce){.marq div,.hint{animation:none}}
+</style>
+</head>
+<body>
+<div id="pre">
+  <div class="rec"><i></i>REC</div>
+  <div class="loaderMark">
+    <div class="loaderRing"></div>
+    <div class="loaderRingInner"></div>
+    <div class="videoLogoContainer">
+      <div class="filmReelOverlay"></div>
+      <div class="playIcon"></div>
+    </div>
+  </div>
+  <div class="loaderText">
+    <div class="loaderBrand">TAYAB SHAIKH</div>
+    <div class="loaderRole">VIDEO EDITOR · MOTION · SOUND</div>
+  </div>
+  <div class="loaderProgress"><span></span></div>
+  <div class="loaderPercent" id="loaderPercent">00%</div>
+</div>
+<section class="hero" id="hero">
+  <canvas id="gl"></canvas>
+  <div class="flash" id="flash"></div>
+  <div class="top"><b>Tayab Shaikh</b><span>Video Editor</span></div>
+  <div class="scrim"></div>
+  <div class="copy">
+    <h1>I cut <span>stories.</span></h1>
+    <p class="sub">Cuts · Color · Motion · Sound</p>
+    <span class="hint" id="hint">Press &amp; hold the reel</span>
+  </div>
+  <div class="marq"><div>COLOR GRADING • STORYTELLING &amp; PACING • MOTION GRAPHICS • SOUND DESIGN • VISUAL STORYTELLING • YOUTUBE &amp; SOCIAL MEDIA EDITING • COLOR GRADING • STORYTELLING &amp; PACING • MOTION GRAPHICS • SOUND DESIGN • VISUAL STORYTELLING • YOUTUBE &amp; SOCIAL MEDIA EDITING • COLOR GRADING • STORYTELLING &amp; PACING • MOTION GRAPHICS • SOUND DESIGN • VISUAL STORYTELLING • YOUTUBE &amp; SOCIAL MEDIA EDITING • COLOR GRADING • STORYTELLING &amp; PACING • MOTION GRAPHICS • SOUND DESIGN • VISUAL STORYTELLING • YOUTUBE &amp; SOCIAL MEDIA EDITING • &nbsp;</div></div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var calm=matchMedia('(prefers-reduced-motion: reduce)').matches?.3:1;
+// ---- preloader
+ var pre=document.getElementById('pre');
+ var progress=document.querySelector('.loaderProgress span');
+ var percent=document.getElementById('loaderPercent');
+ var loadStart=performance.now(),loadDuration=2350;
+ requestAnimationFrame(function(){progress.style.width='100%'});
+ function updateLoader(now){
+   var p=Math.min((now-loadStart)/loadDuration,1);
+   percent.textContent=String(Math.round(p*100)).padStart(2,'0')+'%';
+   if(p<1){requestAnimationFrame(updateLoader);}
+   else{
+     setTimeout(function(){pre.classList.add('out');document.body.classList.add('ready');},180);
+     setTimeout(function(){pre.style.display='none'},1350);
+   }
+ }
+ requestAnimationFrame(updateLoader);
+// ---- scene
+var cv=document.getElementById('gl');
+var r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+r.setPixelRatio(Math.min(devicePixelRatio||1,2));
+var s=new THREE.Scene(),cam=new THREE.PerspectiveCamera(45,1,.1,100);
+s.add(new THREE.AmbientLight(0x8877ff,.7));
+var l1=new THREE.PointLight(0xa78bfa,1.8);l1.position.set(4,4,7);s.add(l1);
+var l2=new THREE.PointLight(0x3b5bdb,1.5);l2.position.set(-5,-3,5);s.add(l2);
+var root=new THREE.Group();s.add(root);
+var mA=new THREE.MeshStandardMaterial({color:0x7c3aed,emissive:0x2e1065,metalness:.5,roughness:.3});
+var mB=new THREE.MeshStandardMaterial({color:0x3b5bdb,emissive:0x172554,metalness:.5,roughness:.35});
+var ring=new THREE.Mesh(new THREE.TorusGeometry(1.7,.15,24,90),mA);root.add(ring);
+var tri=new THREE.Mesh(new THREE.CylinderGeometry(.95,.95,.4,3),mA);tri.rotation.x=Math.PI/2;
+var pw=new THREE.Group();pw.rotation.z=Math.PI/2;pw.add(tri);root.add(pw);
+var items=[],V=THREE.Vector3;
+function add(m,pos,rx,ry,rz,dist){
+  m.position.copy(pos);m.rotation.set(rx,ry,rz);root.add(m);
+  var d=pos.clone().add(new V((Math.random()-.5)*2,(Math.random()-.5)*2,(Math.random()+.3)*2.2)).normalize();
+  items.push({m:m,base:pos.clone(),rot:new V(rx,ry,rz),dir:d,dist:dist,spin:new V(Math.random()-.5,Math.random()-.5,Math.random()-.5)});
+}
+for(var i=0;i<12;i++){var a=i/12*6.283;
+  add(new THREE.Mesh(new THREE.BoxGeometry(.28,.28,.28),mB),new V(Math.cos(a)*2.15,Math.sin(a)*2.15,0),0,0,a,6);}
+var c1=new THREE.Color(0x6d28d9),c2=new THREE.Color(0x1d4ed8);
+for(var j=0;j<28;j++){var a2=j/28*6.283,t=j/27;
+  var col=c1.clone().lerp(c2,t);
+  var fm=new THREE.Mesh(new THREE.BoxGeometry(.62,.42,.03),new THREE.MeshStandardMaterial({color:col,emissive:col.clone().multiplyScalar(.35),metalness:.3,roughness:.4}));
+  add(fm,new V(Math.cos(a2)*3.1,Math.sin(a2)*3.1,((j%3)-1)*.45),0,0,a2+Math.PI/2*0,8);}
+var N=420,pb=new Float32Array(N*3),pd=new Float32Array(N*3),pp=new Float32Array(N*3);
+for(var k=0;k<N;k++){var u=Math.random()*6.283,v=Math.acos(2*Math.random()-1),rr=2.4+Math.random()*1.6;
+  pb[k*3]=rr*Math.sin(v)*Math.cos(u);pb[k*3+1]=rr*Math.sin(v)*Math.sin(u);pb[k*3+2]=rr*Math.cos(v);
+  pd[k*3]=pb[k*3]/rr;pd[k*3+1]=pb[k*3+1]/rr;pd[k*3+2]=pb[k*3+2]/rr;}
+var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+var pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0xa78bfa,size:.06,transparent:true,opacity:.85}));root.add(pts);
+var camZ=9;
+function size(){var w=innerWidth,h=innerHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();
+  var asp=w/h;camZ=asp<.7?14.5:asp<1.1?12:9.5;}
+size();addEventListener('resize',size);
+// ---- hold to blast
+var hold=false,b=0,tx=0,ty=0,hint=document.getElementById('hint'),flash=document.getElementById('flash'),hero=document.getElementById('hero');
+function down(){hold=true}function up(){hold=false}
+hero.addEventListener('pointerdown',down);
+addEventListener('pointerup',up);addEventListener('pointercancel',up);
+hero.addEventListener('contextmenu',function(e){e.preventDefault()});
+addEventListener('keydown',function(e){if(e.code==='Space'){e.preventDefault();down()}});
+addEventListener('keyup',function(e){if(e.code==='Space')up()});
+hero.addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;});
+var clk=new THREE.Clock();
+function loop(){
+  requestAnimationFrame(loop);var t=clk.getElapsedTime()*calm;
+  b+=((hold?1:0)-b)*(hold?.05:.08);
+  var e=b*b*(3-2*b);
+  items.forEach(function(it){
+    it.m.position.set(it.base.x+it.dir.x*e*it.dist,it.base.y+it.dir.y*e*it.dist,it.base.z+it.dir.z*e*it.dist);
+    it.m.rotation.set(it.rot.x+it.spin.x*e*9,it.rot.y+it.spin.y*e*9,it.rot.z+it.spin.z*e*9);
+  });
+  var p=pg.attributes.position.array;
+  for(var q=0;q<N*3;q++)p[q]=pb[q]*(1+e*.4)+pd[q]*e*9;
+  pg.attributes.position.needsUpdate=true;
+  ring.rotation.z=t*.35;
+  mA.emissiveIntensity=1+e*2.2;mB.emissiveIntensity=1+e*1.8;
+  root.rotation.y+=((tx*.45)-root.rotation.y)*.05;
+  root.rotation.x+=((ty*.3)-root.rotation.x)*.05;
+  pts.rotation.z=t*.08;
+  root.scale.setScalar(1+Math.sin(t*1.5)*.012+e*.1);
+  cam.position.set((Math.random()-.5)*.12*e,(Math.random()-.5)*.12*e,camZ);
+  flash.style.opacity=(e*.9).toFixed(3);
+  var txt=b>.5?'Release to rebuild':'Press & hold the reel';
+  if(hint.textContent!==txt)hint.textContent=txt;
+  r.render(s,cam);
+}
+loop();
+})();
+</script>
+</body>
+</html>
