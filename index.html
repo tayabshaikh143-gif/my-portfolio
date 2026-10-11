@@ -516,12 +516,125 @@ footer{background:rgba(7,5,20,.5);-webkit-backdrop-filter:blur(20px) saturate(1.
 
 /* --- headline depth so type stays crisp over the aurora --- */
 .h2,.hero h1{text-shadow:0 2px 30px rgba(0,0,0,.5)}
+
+/* ==========================================================================
+   17 · LIQUID ENVIRONMENT + LIGHT THEME
+   Flowing-water caustics, wobbling liquid blobs, click ripples, a glass reel
+   stage, plus a full apple-style LIGHT liquid-glass theme (nav toggle).
+   ========================================================================== */
+
+/* ---- flowing water light (caustics) across the whole page ---- */
+#liquid{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:.5}
+#liquid i{position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;display:block;border-radius:48% 52% 46% 54%/52% 48% 54% 46%;
+  background:
+    radial-gradient(closest-side at 32% 30%,rgba(140,220,255,.34),transparent 72%),
+    radial-gradient(closest-side at 68% 58%,rgba(196,150,255,.32),transparent 72%),
+    radial-gradient(closest-side at 46% 80%,rgba(130,255,222,.26),transparent 72%),
+    radial-gradient(closest-side at 80% 22%,rgba(255,160,240,.22),transparent 72%);
+  mix-blend-mode:screen;transform:translate(-50%,-50%);animation:liquidSpin 70s linear infinite}
+#liquid i:nth-child(2){opacity:.45;animation-duration:120s;animation-direction:reverse}
+@keyframes liquidSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(1.06)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.06)}}
+
+/* aurora blobs now wobble like liquid */
+#aurora i{border-radius:44% 56% 52% 48%/50% 44% 56% 50%;animation:aurora 30s ease-in-out infinite alternate,auroraMorph 16s ease-in-out infinite alternate}
+@keyframes auroraMorph{0%{border-radius:44% 56% 52% 48%/50% 44% 56% 50%}100%{border-radius:56% 44% 48% 52%/46% 56% 44% 54%}}
+
+/* click ripples — the surface answers like water */
+.ripple{position:fixed;left:0;top:0;width:12px;height:12px;margin:-6px;border-radius:50%;z-index:65;pointer-events:none;
+  border:1px solid rgba(180,220,255,.6);background:radial-gradient(circle,rgba(160,210,255,.35),transparent 70%);
+  animation:ripple .95s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes ripple{0%{transform:scale(.2);opacity:.9}70%{opacity:.45}100%{transform:scale(18);opacity:0}}
+
+/* ---- reels: a glass showcase stage + sweeping reflection ---- */
+.vlist{padding:16px;border-radius:28px;background:var(--glass-bg-dim);border:1px solid var(--glass-edge);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  box-shadow:var(--glass-ring),var(--glass-shadow)}
+.vmeta b{color:#fff}
+.vcard::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;transform:translateX(-130%) skewX(-8deg);
+  background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.32) 50%,transparent 66%);transition:transform 0s}
+.vcard:hover::after{transform:translateX(130%) skewX(-8deg);transition:transform .95s ease}
+.vcard.playing::after{display:none}
+.c-row:hover{background:var(--glass-bg)}
+
+/* ---- theme toggle button ---- */
+#themeBtn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;color:var(--ink);
+  background:var(--glass-bg);border:1px solid var(--glass-edge);
+  -webkit-backdrop-filter:blur(12px) saturate(1.7);backdrop-filter:blur(12px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 26px -16px rgba(0,0,0,.85);transition:transform .25s,border-color .3s}
+#themeBtn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.7)}
+#themeBtn svg{width:18px;height:18px}
+#themeBtn .ic-sun{display:none}
+:root[data-theme="light"] #themeBtn .ic-sun{display:block}
+:root[data-theme="light"] #themeBtn .ic-moon{display:none}
+
+/* ==========================================================================
+   LIGHT · frosted liquid glass (apple iOS style)
+   ========================================================================== */
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#eaeefc;
+  --bg2:#ffffff;
+  --panel:rgba(255,255,255,.6);
+  --ink:#1b1839;
+  --muted:#514d79;
+  --dim:#8a85ad;
+  --vio:#7c3aed;
+  --vioL:#6d28d9;
+  --blue:#2563eb;
+  --cyan:#0e7490;
+  --pink:#db2777;
+  --line:rgba(80,80,140,.15);
+  --line2:rgba(80,80,140,.26);
+  --glass-sat:150%;
+  --glass-bg:linear-gradient(135deg,rgba(255,255,255,.86),rgba(255,255,255,.55) 46%,rgba(255,255,255,.74));
+  --glass-bg-dim:linear-gradient(135deg,rgba(255,255,255,.66),rgba(255,255,255,.38));
+  --glass-edge:rgba(255,255,255,.95);
+  --glass-hi:rgba(255,255,255,1);
+  --glass-ring:inset 0 1px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.45),inset 0 0 30px rgba(255,255,255,.5);
+  --glass-shadow:0 26px 60px -30px rgba(50,45,110,.5),0 6px 18px -10px rgba(50,45,110,.26);
+}
+:root[data-theme="light"] #grid{background-image:linear-gradient(rgba(60,60,120,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(60,60,120,.06) 1px,transparent 1px)}
+:root[data-theme="light"] #vig{background:radial-gradient(ellipse at 50% 42%,transparent 60%,rgba(120,120,180,.2) 100%)}
+:root[data-theme="light"] #ambient{background:radial-gradient(circle,rgba(124,58,237,.14),transparent 65%)}
+:root[data-theme="light"] .sec::before{background:linear-gradient(180deg,rgba(234,238,252,.92) 0%,rgba(234,238,252,.5) 22%,rgba(234,238,252,.4) 50%,rgba(234,238,252,.5) 78%,rgba(234,238,252,.92) 100%)}
+:root[data-theme="light"] .hero::before{background:radial-gradient(ellipse at 50% 40%,rgba(150,120,255,.22) 0%,rgba(234,238,252,.4) 44%,transparent 74%)}
+:root[data-theme="light"] .hero-scrim{background:linear-gradient(to top,rgba(234,238,252,.96) 0%,rgba(234,238,252,.72) 40%,transparent 100%)}
+:root[data-theme="light"] .hero h1,:root[data-theme="light"] .loaderBrand{color:var(--ink)}
+:root[data-theme="light"] .hero .sub{color:var(--muted);text-shadow:0 2px 14px rgba(255,255,255,.7)}
+:root[data-theme="light"] .h2,:root[data-theme="light"] .hero h1{text-shadow:0 2px 26px rgba(255,255,255,.7)}
+:root[data-theme="light"] #nav{border-color:rgba(255,255,255,.75)}
+:root[data-theme="light"] .nav-links a{color:var(--muted)}
+:root[data-theme="light"] .nav-cta .pill:hover,:root[data-theme="light"] #themeBtn:hover{border-color:rgba(124,58,237,.4)}
+:root[data-theme="light"] .hint{color:var(--vio);border-color:rgba(124,58,237,.3);background:rgba(255,255,255,.6)}
+:root[data-theme="light"] footer{background:rgba(255,255,255,.55)}
+:root[data-theme="light"] .marq{background:rgba(255,255,255,.45);border-top-color:rgba(80,80,140,.14);border-bottom-color:rgba(80,80,140,.1)}
+:root[data-theme="light"] .marq div{color:rgba(109,40,217,.5)}
+:root[data-theme="light"] #menu{background:rgba(234,238,252,.62)}
+:root[data-theme="light"] #pre{background:radial-gradient(circle at 50% 42%,rgba(214,206,255,.96),#eaeefc 74%)}
+:root[data-theme="light"] .videoLogoContainer{background:radial-gradient(circle,rgba(255,255,255,.75) 0%,rgba(226,220,255,.7) 78%);border-color:rgba(255,255,255,.95);box-shadow:0 0 40px rgba(124,58,237,.25),inset 0 1px 0 #fff,inset 0 0 26px rgba(124,58,237,.18)}
+:root[data-theme="light"] .playIcon{border-left-color:var(--vio)}
+:root[data-theme="light"] .loaderRole,:root[data-theme="light"] #loaderPercent{color:var(--vio)}
+:root[data-theme="light"] .gbtn{color:var(--ink)}
+:root[data-theme="light"] .gbtn:hover,:root[data-theme="light"] .gbtn:focus-visible{box-shadow:inset 0 1px 0 #fff,inset 0 0 30px rgba(255,255,255,.6),-1px -1px 0 rgba(80,180,255,.7),1px 1px 0 rgba(255,120,220,.6),0 22px 48px -18px rgba(40,40,90,.5),0 0 38px -6px rgba(140,110,255,.5)}
+:root[data-theme="light"] .sec-head{border-top-color:rgba(80,80,140,.16)}
+:root[data-theme="light"] .tool:hover,:root[data-theme="light"] .svc:hover,:root[data-theme="light"] .vcard:hover,:root[data-theme="light"] .c-card:hover,:root[data-theme="light"] .c-row:hover{border-color:rgba(124,58,237,.35)}
+:root[data-theme="light"] .c-status{color:#16a34a}
+:root[data-theme="light"] .c-status i{background:#16a34a;box-shadow:0 0 10px #16a34a}
+:root[data-theme="light"] .f-field input,:root[data-theme="light"] .f-field select,:root[data-theme="light"] .f-field textarea{background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.6));border-color:rgba(80,80,140,.22);box-shadow:inset 0 2px 6px rgba(80,80,140,.12)}
+:root[data-theme="light"] .f-field input::placeholder,:root[data-theme="light"] .f-field textarea::placeholder{color:var(--dim)}
+:root[data-theme="light"] .vplay{background:rgba(124,58,237,.72);border-color:rgba(255,255,255,.6)}
+:root[data-theme="light"] .vmeta span{color:#ddd6fe}
+:root[data-theme="light"] #toTop{color:var(--vio)}
+:root[data-theme="light"] #liquid i{mix-blend-mode:normal;opacity:.5}
+:root[data-theme="light"] #aurora i{mix-blend-mode:normal;opacity:.4}
 </style>
+<script>(function(){try{var s=localStorage.getItem('ts-theme');var t=s||((window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 </head>
 <body>
 <a class="skip" href="#intro">Skip to content</a>
 <div id="progress" aria-hidden="true"></div>
 <div id="aurora" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
+<div id="liquid" aria-hidden="true"><i></i><i></i></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="grid" aria-hidden="true"></div>
 <div id="ambient" aria-hidden="true"></div>
@@ -562,6 +675,10 @@ footer{background:rgba(7,5,20,.5);-webkit-backdrop-filter:blur(20px) saturate(1.
   </nav>
   <div class="nav-cta">
     <a class="pill" href="#contact">Hire me</a>
+    <button id="themeBtn" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Light / dark">
+      <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z"/></svg>
+      <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+    </button>
     <button id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -1196,6 +1313,29 @@ function onScr(){
       b.addEventListener(ev,function(){ b.classList.remove('down'); });
     });
   });
+})();
+
+/* ---------- theme toggle + liquid ripples ---------- */
+(function(){
+  var root=document.documentElement, btn=$('#themeBtn'), KEY='ts-theme';
+  function apply(t){
+    root.setAttribute('data-theme',t);
+    if(btn){ btn.setAttribute('aria-pressed',t==='light');
+      btn.setAttribute('aria-label', t==='light'?'Switch to dark theme':'Switch to light theme'); }
+  }
+  /* the head script already set it (no flash) — just sync the button state */
+  apply(root.getAttribute('data-theme')==='light'?'light':'dark');
+  if(btn) btn.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='light'?'dark':'light';
+    apply(next); try{ localStorage.setItem(KEY,next); }catch(e){}
+  });
+  /* water ripples on every tap / click */
+  if(REDUCED) return;
+  document.addEventListener('pointerdown',function(e){
+    var r=document.createElement('i'); r.className='ripple';
+    r.style.left=e.clientX+'px'; r.style.top=e.clientY+'px';
+    document.body.appendChild(r); setTimeout(function(){ r.remove(); },1000);
+  },{passive:true});
 })();
 
 /* ---------- misc chrome ---------- */
