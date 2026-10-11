@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#06050f">
+<meta name="theme-color" content="#050318">
 <meta name="description" content="Tayab Shaikh — Video editor & motion designer. Cuts, color, motion and sound for YouTube, short-form and brand films.">
 <title>Tayab Shaikh — Video Editor &amp; Motion Designer</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%233b5bdb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M26 20v24l20-12z' fill='%23fff'/%3E%3C/svg%3E">
@@ -34,19 +34,19 @@
 
 /* ---------- 01 · Tokens + reset ---------- */
 :root{
-  --bg:#06050f;
-  --bg2:#0c0a22;
-  --panel:rgba(17,14,43,.55);
-  --ink:#f2efff;
-  --muted:#8b86bd;
-  --dim:#5a5586;
+  --bg:#050318;
+  --bg2:#0b0a26;
+  --panel:rgba(255,255,255,.06);
+  --ink:#f5f3ff;
+  --muted:#a9a2dc;
+  --dim:#726aa8;
   --vio:#8b5cf6;
-  --vioL:#c4b5fd;
-  --blue:#3b5bdb;
-  --cyan:#7dd3fc;
-  --pink:#e879f9;
-  --line:rgba(196,181,253,.14);
-  --line2:rgba(167,139,250,.32);
+  --vioL:#cbbcff;
+  --blue:#4f7bff;
+  --cyan:#7fe9ff;
+  --pink:#ffa6f6;
+  --line:rgba(255,255,255,.14);
+  --line2:rgba(255,255,255,.26);
   --glow:0 0 42px rgba(139,92,246,.32);
   --ease:cubic-bezier(.2,.7,.2,1);
   --fd:var(--ease);
@@ -397,11 +397,131 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:44px
   [data-reveal],.sp-wi{opacity:1!important;transform:none!important;filter:none!important}
   .marq div,#toTop{animation:none!important}
 }
+
+/* ==========================================================================
+   16 · LIQUID GLASS LAYER  (added)
+   Apple-style frosted "liquid glass" material. Appended last so it re-skins
+   every surface without changing the original structure or behaviour.
+   ========================================================================== */
+
+/* --- aurora backdrop: gives the frosted glass real colour to refract --- */
+#aurora{position:fixed;inset:-14%;z-index:0;pointer-events:none;overflow:hidden;filter:saturate(1.2)}
+#aurora i{position:absolute;display:block;border-radius:50%;opacity:.6;mix-blend-mode:screen;will-change:transform;animation:aurora 30s ease-in-out infinite alternate}
+#aurora .b1{width:62vw;height:62vw;left:-16vw;top:-18vh;background:radial-gradient(circle,rgba(124,58,237,.85),rgba(124,58,237,0) 62%)}
+#aurora .b2{width:58vw;height:58vw;right:-18vw;top:-12vh;background:radial-gradient(circle,rgba(59,107,255,.75),rgba(59,107,255,0) 62%);animation-delay:-7s}
+#aurora .b3{width:54vw;height:54vw;left:2vw;bottom:-26vh;background:radial-gradient(circle,rgba(255,110,235,.55),rgba(255,110,235,0) 62%);animation-delay:-15s}
+#aurora .b4{width:48vw;height:48vw;right:2vw;bottom:-22vh;background:radial-gradient(circle,rgba(70,225,255,.55),rgba(70,225,255,0) 62%);animation-delay:-22s}
+@keyframes aurora{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(3vw,3vh,0) scale(1.16)}100%{transform:translate3d(-3vw,-2vh,0) scale(1.04)}}
+
+/* --- glass material tokens --- */
+:root{
+  --glass-blur:18px;
+  --glass-sat:185%;
+  --glass-bg:linear-gradient(135deg,rgba(255,255,255,.17),rgba(255,255,255,.05) 44%,rgba(255,255,255,.10));
+  --glass-bg-dim:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03) 60%,rgba(255,255,255,.06));
+  --glass-edge:rgba(255,255,255,.26);
+  --glass-hi:rgba(255,255,255,.72);
+  --glass-ring:inset 0 1px 0 var(--glass-hi),inset 0 -1px 1px rgba(255,255,255,.07),inset 1px 0 0 rgba(255,255,255,.13),inset -1px 0 0 rgba(255,255,255,.13),inset 0 0 34px rgba(255,255,255,.05);
+  --glass-shadow:0 28px 64px -32px rgba(0,0,0,.92),0 4px 14px -8px rgba(0,0,0,.55);
+}
+
+/* --- one glass recipe, applied to every raised surface --- */
+.c-card,.tool,.vcard,.svc,.form,.c-row,.socials a,.stat,.intro-tags span,.hint,#toast,#toTop,.vtime,.vplay{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.08);
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat)) brightness(1.08);
+  border:1px solid var(--glass-edge);
+  box-shadow:var(--glass-ring),var(--glass-shadow);
+}
+
+/* faint grid becomes white so it reads through the glass */
+#grid{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px)}
+
+/* section scrim lightened so the aurora shows through and the glass has colour to bend */
+.sec::before{background:linear-gradient(180deg,rgba(5,3,24,.9) 0%,rgba(5,3,24,.5) 22%,rgba(5,3,24,.42) 50%,rgba(5,3,24,.5) 78%,rgba(5,3,24,.9) 100%)}
+
+/* --- floating glass navigation pill --- */
+#nav{top:calc(10px + env(safe-area-inset-top,0px));left:50%;right:auto;transform:translateX(-50%);
+  width:min(1240px,calc(100% - 20px));border-radius:22px;padding:9px 14px;
+  background:var(--glass-bg-dim);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(14px) saturate(1.7);backdrop-filter:blur(14px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 20px 44px -28px rgba(0,0,0,.95)}
+#nav.scrolled{background:var(--glass-bg);border-color:var(--glass-edge);box-shadow:var(--glass-ring),var(--glass-shadow)}
+.nav-links a:hover,.nav-links a[aria-current],.nav-cta .pill,#menuBtn{
+  background:var(--glass-bg);border:1px solid var(--glass-edge);
+  -webkit-backdrop-filter:blur(12px) saturate(1.7);backdrop-filter:blur(12px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 26px -16px rgba(0,0,0,.85)}
+.nav-cta .pill:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),-1px -1px 0 rgba(120,235,255,.6),1px 1px 0 rgba(255,150,245,.5),0 14px 30px -14px rgba(0,0,0,.9)}
+
+/* --- mobile menu: full-screen liquid glass --- */
+#menu{background:rgba(7,5,20,.55);-webkit-backdrop-filter:blur(34px) saturate(1.8);backdrop-filter:blur(34px) saturate(1.8)}
+
+/* --- buttons: specular glass capsules --- */
+.gbtn{
+  background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.06) 46%,rgba(255,255,255,.10));
+  border:1px solid rgba(255,255,255,.36);
+  -webkit-backdrop-filter:blur(16px) saturate(1.85) brightness(1.06);backdrop-filter:blur(16px) saturate(1.85) brightness(1.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -10px 22px rgba(255,255,255,.05),inset 0 0 28px rgba(255,255,255,.06),0 18px 42px -18px rgba(0,0,0,.92)}
+.gbtn.primary{background:linear-gradient(180deg,rgba(186,166,255,.52),rgba(139,92,246,.28) 52%,rgba(79,123,255,.36));border-color:rgba(255,255,255,.5)}
+.gbtn::before{background:radial-gradient(150px circle at var(--mx) var(--my),rgba(255,255,255,.42),transparent 62%)}
+.gbtn:hover,.gbtn:focus-visible{
+  border-color:rgba(255,255,255,.82);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 0 30px rgba(255,255,255,.08),
+    -1px -1px 0 rgba(120,235,255,.7),1px 1px 0 rgba(255,150,245,.6),
+    0 22px 48px -18px rgba(0,0,0,.9),0 0 38px -6px rgba(150,120,255,.7)}
+
+/* --- icon tiles / badges --- */
+.svc-ic,.tool-badge,.c-ic{
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.26);
+  -webkit-backdrop-filter:blur(8px) saturate(1.6);backdrop-filter:blur(8px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 24px -14px rgba(0,0,0,.85)}
+
+/* --- chromatic edge fringing on hover (the “liquid” lens look) --- */
+.tool:hover,.svc:hover,.vcard:hover,.c-card:hover,.c-row:hover{
+  border-color:rgba(255,255,255,.5);
+  box-shadow:inset 0 1px 0 var(--glass-hi),inset 0 0 0 1px rgba(255,255,255,.05),
+    -1px -1px 0 rgba(120,235,255,.55),1px 1px 0 rgba(255,150,245,.45),
+    0 30px 62px -28px rgba(0,0,0,.95),0 0 38px -10px rgba(150,120,255,.6)}
+
+/* pointer highlights, tuned to the glass palette */
+.c-card::before{background:radial-gradient(560px circle at var(--mx,70%) var(--my,20%),rgba(255,255,255,.16),transparent 58%)}
+.tool::after{background:radial-gradient(300px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.16),transparent 60%)}
+
+/* --- sunken glass form fields --- */
+.f-field input,.f-field select,.f-field textarea{
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.10));
+  border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.4),inset 0 -1px 0 rgba(255,255,255,.08)}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{
+  border-color:rgba(255,255,255,.6);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.35),0 0 0 4px rgba(139,92,246,.22),0 0 26px -6px rgba(139,92,246,.75)}
+
+/* --- marquee strip + footer glass --- */
+.marq{background:var(--glass-bg-dim);-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);border-top-color:rgba(255,255,255,.14);border-bottom-color:rgba(255,255,255,.08)}
+footer{background:rgba(7,5,20,.5);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);border-top-color:rgba(255,255,255,.14)}
+
+/* --- section rules + video chrome --- */
+.sec-head{border-top-color:rgba(255,255,255,.16)}
+.vtime{background:rgba(10,8,24,.6);border-color:rgba(255,255,255,.28)}
+.vplay svg{filter:drop-shadow(0 1px 6px rgba(0,0,0,.5))}
+
+/* --- preloader glass lens --- */
+#pre{background:radial-gradient(circle at 50% 42%,rgba(24,16,68,.92),#05040c 72%)}
+.videoLogoContainer{background:radial-gradient(circle,rgba(255,255,255,.14) 0%,rgba(13,11,36,.55) 78%);border-color:rgba(255,255,255,.7);
+  box-shadow:0 0 40px rgba(124,58,237,.4),inset 0 1px 0 rgba(255,255,255,.6),inset 0 0 26px rgba(124,58,237,.3);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* --- headline depth so type stays crisp over the aurora --- */
+.h2,.hero h1{text-shadow:0 2px 30px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
 <a class="skip" href="#intro">Skip to content</a>
 <div id="progress" aria-hidden="true"></div>
+<div id="aurora" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="grid" aria-hidden="true"></div>
 <div id="ambient" aria-hidden="true"></div>
@@ -895,7 +1015,7 @@ function onScr(){
   sections.forEach(function(s){ io.observe(s); });
 })();
 
-/* ---------- toggle tilt on cards ---------- */
+/* ---------- toggle tilt on cards + liquid specular ---------- */
 (function(){
   if(!FINE) return;
   $$('.c-card,.svc').forEach(function(el){
@@ -908,6 +1028,15 @@ function onScr(){
     });
     el.addEventListener('pointerleave',function(){ el.style.transform=''; });
   });
+  /* liquid specular — one listener drives the highlight on every glass surface */
+  var SPEC='.tool,.c-card,.svc,.gbtn,.c-row,.stat,.socials a,.intro-tags span,.hint';
+  document.addEventListener('pointermove',function(e){
+    var t=e.target; if(!t||!t.closest) return;
+    var el=t.closest(SPEC); if(!el) return;
+    var r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    el.style.setProperty('--my',(e.clientY-r.top)+'px');
+  },{passive:true});
 })();
 
 /* ---------- word-split + scroll reveal ---------- */
